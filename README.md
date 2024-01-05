@@ -6,40 +6,92 @@ This repository contains a detailed implementation of a vector and its iterator 
 
 - Vector Implementation
 - Iterator Implementation
-- Usage
-- License
 
 ## Vector Implementation
 
-The vector is a dynamic array implementation. It can grow and shrink in size as needed. The implementation includes functions for adding an element, removing an element, and accessing elements.
+The vector is a dynamic array implementation. It can grow and shrink in size as needed. The implementation includes functions for adding an element, removing an element, and accessing elements. This implementation has almost all functions as the STL vector class.
 
 ```cpp
 template <typename T>
 class Vector {
-    T* arr;
-    int capacity;
-    int current;
-
+private:
+    T* data;
+    int sze ;
+    int MaxCapacity;
 public:
     // Constructor
-    Vector() {
-        arr = new T[1];
-        capacity = 1;
-        current = 0;
-    }
+    Vector();
+    Vector(int);
+    Vector(int , T);
+    Vector(T * , int);
+    Vector(Vector<T> &);
+    Vector(Vector<T> && );
+    Vector(initializer_list<T>);
 
-    // Function to add an element at the end
-    void push(T data) { /*...*/ }
+    // operators
+    Vector<T > & operator = (Vector<T> &);
+    Vector<T > & operator = (Vector<T> &&);
+    bool operator == (Vector<T> &);
+    bool operator != (Vector<T> &) ;
+    bool operator < (Vector<T> &);
+    bool operator > (Vector<T> &);
+    T& operator[](int);
+    template<typename U > friend ostream & operator << (ostream& , Vector<U>);
 
-    // Function to add an element at a specific index
-    void push(int data, int index) { /*...*/ }
+    // methods
+    void push_back(T);
+    void pop_back();
+    T back();
+    T front();
+    void insert(Iterator , T);
+    void erase (Iterator);
+    void erase (Iterator , Iterator);
+    Iterator begin();
+    Iterator end();
+    void clear ();
+    int size();
+    int capacity();
+    bool empty();
+    void resize();
+    void resize(int);
 
-    // Function to extract an element at a specific index
-    T get(int index) { /*...*/ }
-
-    // Function to delete the last element
-    void pop() { /*...*/ }
-
-    // Function to get the size of the vector
-    int size() { /*...*/ }
+    ~Vector();
 };
+```
+# Iterator Implementation
+
+The iterator allows traversal through the vector in a simple and intuitive manner. The implementation includes functions for moving to the next element, checking if the end of the vector has been reached, and accessing the current element. This iterator is implemented for the vector and can be used with STL functions such as sort, for_each, etc.
+
+```cpp
+class Iterator {
+    public:
+        using iterator_category = std::random_access_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = T;
+        using pointer = T *;
+        using reference = T &;
+
+    public:
+        Iterator(pointer ptr);
+
+        Iterator &operator++();
+        Iterator operator++(int);
+        Iterator &operator--();
+        Iterator operator--(int);
+
+        reference operator*();
+        pointer operator->();
+
+        friend bool operator==(const Iterator &a, const Iterator &b);
+        friend bool operator!=(const Iterator &a, const Iterator &b);
+        friend bool operator<(const Iterator &a, const Iterator &b);
+        friend bool operator>(const Iterator &a, const Iterator &b);
+
+        Iterator &operator-=(int i);
+        Iterator &operator+=(int i);
+        Iterator operator-(int i);
+        int operator-(const Iterator &i);
+        Iterator operator+(int i);
+};
+
+```
